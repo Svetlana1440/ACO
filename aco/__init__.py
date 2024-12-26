@@ -1,5 +1,5 @@
 import random
-
+import matplotlib.pyplot as plt
 
 class Ant:
     def __init__(
@@ -85,6 +85,7 @@ class Ant:
             self.tmp_pheromone_map[a][b] += self.pheromone_constant / self.path_cost
             self.tmp_pheromone_map[b][a] += self.pheromone_constant / self.path_cost
 
+
 class AntColony:
     def __init__(
         self,
@@ -113,6 +114,10 @@ class AntColony:
         self.best_path = None
         self.best_cost = float('inf')
 
+        # Для хранения данных для графиков
+        self.path_lengths = []
+        self.best_path_probabilities = []
+
     def run(self):
         for iteration in range(self.iterations):
             ants = [Ant(
@@ -125,12 +130,27 @@ class AntColony:
                 self.pheromone_constant,
             ) for _ in range(self.ant_count)]
 
+            iteration_best_cost = float('inf')
+            successful_paths = 0
             for ant in ants:
                 success = ant.run()
 
-                if success and ant.path_cost < self.best_cost:
-                    self.best_cost = ant.path_cost
-                    self.best_path = ant.path
+                if success:
+                    successful_paths += 1
+                    if ant.path_cost < iteration_best_cost:
+                        iteration_best_cost = ant.path_cost
+                        self.best_path = ant.path
+
+            if self.best_path:
+                self.best_cost = iteration_best_cost
+
+            # Запись длины пути и вероятности по лучшему пути
+            self.path_lengths.append(self.best_cost)
+            if successful_paths > 0:
+                best_path_probability = successful_paths / self.ant_count
+            else:
+                best_path_probability = 0
+            self.best_path_probabilities.append(best_path_probability)
 
             self.update_pheromones()
 
@@ -143,3 +163,22 @@ class AntColony:
                 self.pheromone_map[i][j] *= (1 - self.pheromone_evaporation_rate)
                 self.pheromone_map[i][j] += self.tmp_pheromone_map[i][j]
                 self.tmp_pheromone_map[i][j] = 0
+
+    def plot_graphs(self):
+        # График изменения длины пути на каждой итерации
+        plt.figure(figsize=(12, 6))
+        plt.subplot(1, 2, 1)
+        plt.plot(range(1, self.iterations + 1), self.path_lengths, marker='o', color='b')
+        plt.title('Path Lengths Over Iterations')
+        plt.xlabel('Iteration')
+        plt.ylabel('Path Length')
+
+        # График изменения вероятности прохождения по лучшему пути
+        plt.subplot(1, 2, 2)
+        plt.plot(range(1, self.iterations + 1), self.best_path_probabilities, marker='o', color='r')
+        plt.title('Best Path Probability Over Iterations')
+        plt.xlabel('Iteration')
+        plt.ylabel('Best Path Probability')
+
+        plt.tight_layout()
+        plt.show()
