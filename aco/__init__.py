@@ -135,3 +135,4 @@ class AntColony:
         plt.tight_layout()
         plt.grid()
         plt.show()
+
