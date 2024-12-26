@@ -1,5 +1,3 @@
-
-
 class Ant:
     def __init__(self, alpha=1, beta=1):
         self.alpha = alpha
