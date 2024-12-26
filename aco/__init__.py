@@ -12,8 +12,8 @@ class AntColony:
         ant_count=10,
         alpha=1.0,
         beta=2.0,
-        pheromone_evaporation_rate=0.1,
-        pheromone_constant=100.0,
+        pheromone_evaporation_rate=0.3,
+        pheromone_constant=1.0,
         iterations=100,
     ):
         self.graph = graph

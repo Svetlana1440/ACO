@@ -14,7 +14,7 @@ graph = [
 
 
 
-colony = AntColony(graph, start_node=0, ant_count=1, iterations=100, alpha=2, beta=1, pheromone_evaporation_rate=0.3, pheromone_constant=1)
+colony = AntColony(graph, start_node=0, ant_count=1, iterations=100, alpha=2, beta=1, pheromone_evaporation_rate=0.3, pheromone_constant=0.5)
 best_path, best_cost = colony.run()
 
 print(f"Best path: {best_path}")
